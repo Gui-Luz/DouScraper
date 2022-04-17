@@ -1,4 +1,3 @@
-import uuid
 from core.auxiliary.auxiliary import get_soup, request_url
 
 
@@ -27,11 +26,5 @@ class FullArticleScraper:
             self._errors.append(self._full_link)
 
     def return_full_article(self):
-        article_id = str(uuid.uuid3(uuid.NAMESPACE_URL, self._full_link))
         self._article['fullText'] = self._article_text
-        full_article = {article_id: self._article}
-        return full_article
-
-
-
-
+        return self._article

@@ -6,7 +6,6 @@ from core.models.edition_builder import EditionBuilder
 from core.models.article_chopper import ArticleChopper
 from core.models.full_article_scrapper import FullArticleScraper
 
-
 logging.basicConfig(filename='dou_scrapper.log', filemode='w', format='%(message)s',
                     level=logging.DEBUG)
 
@@ -21,18 +20,19 @@ class DouScrapper:
         self._number_of_dates = len(self._dates)
 
     def scrape(self):
-        print(f'Started scraping {datetime.datetime.now()}')
+        print(f'[+] Started scraping at {datetime.datetime.now()}')
         while self._dates:
             date = self._dates.pop(0)
+            print(f'[+] Scraping dou edition: {date}')
             edition = EditionBuilder(date)
             sections = edition.builder()
             chopper = ArticleChopper(sections)
             articles = chopper.chop()
             for article in articles:
                 article = FullArticleScraper(article)
-                self._save_article(article.return_full_article())
+                self._save_article(article.return_full_article(), date)
             time.sleep(1)
-        print(f'Started scraping {datetime.datetime.now()}')
+        print(f'[+]Started scraping {datetime.datetime.now()}')
 
     def _generate_dates(self, start, end):
         dt = datetime.datetime(self._format_time(start)[0], self._format_time(start)[1], self._format_time(start)[2])
@@ -53,6 +53,6 @@ class DouScrapper:
         return year, month, day
 
     @staticmethod
-    def _save_article(article):
-        with open('output.json', 'a', encoding='utf-8') as file:
+    def _save_article(article, date):
+        with open(f'output-{date}.json', 'a', encoding='utf-8') as file:
             json.dump(article, file, indent=4, ensure_ascii=False)
