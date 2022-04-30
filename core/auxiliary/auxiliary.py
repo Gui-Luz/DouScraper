@@ -44,6 +44,7 @@ def get_section(url):
         j = json.loads(script.text)
         return j, None
     except Exception as e:
+        print(e)
         return None, e
 
 
@@ -52,8 +53,24 @@ def format_date_for_elk(date_string):
     return str(date_object.date())
 
 
+def format_date(date_string):
+    date_object = datetime.strptime(date_string, "%d-%m-%Y")
+    date_string = date_object.strftime('%Y-%m-%d')
+    return date_string
+
+
 def log_error(error):
-    with open('./output/error_log.txt', 'w') as file:
+    with open('./outputs/error_log.txt', 'w') as file:
         file.write(error)
 
+
+def load_json_from_file(path, file):
+    with open(path + file, 'r') as file:
+        j = json.load(file)
+    return j
+
+
+def get_files_in_dir(path):
+    files = os.listdir(path)
+    return files
 

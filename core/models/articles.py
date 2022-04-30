@@ -1,6 +1,6 @@
 from core.auxiliary.auxiliary import get_soup, request_url, format_date_for_elk, log_error
 import json
-import random
+import hashlib
 
 
 class Articles:
@@ -34,7 +34,7 @@ class FullArticles:
 
     def _generate_full_article(self):
         print(f'[+] Will request {len(self._articles)} articles')
-        for article in self._articles:
+        for article in self._articles[:4]:                                                     ### TEST ONLY
             article = self._format_date(article)
             full_article_text = self._scrape_article_full_text(article)
             full_article = self._append_full_text_to_article(article, full_article_text)
@@ -57,7 +57,7 @@ class FullArticles:
         except Exception as e:
             print(f'Error')
             self._counter += 1
-            log_error(f'[+] Could not get {self._date}: {error}')
+            log_error(f'[+] {e}')
             self._errors.append(e)
 
     @staticmethod
@@ -72,9 +72,10 @@ class FullArticles:
 
     @staticmethod
     def _save_articles(article):
-        with open(f"./outputs/{article['pubDate']}_{random.getrandbits(128)}.json", 'a', encoding='utf-8') as file:
+        hashed_string = hashlib.sha256(str(article).encode('utf-8')).hexdigest()
+        with open(f"./outputs/{article['pubDate']}/full_articles/{hashed_string}.json", 'a', encoding='utf-8') as file:
             json.dump(article, file, indent=4, ensure_ascii=False)
 
     @property
-    def full_article(self):
+    def full_articles(self):
         return self._full_articles
