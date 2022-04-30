@@ -17,21 +17,21 @@ class Edition:
         print(f'[+][+][+] Getting dou edition {self._date}:')
         section, error = get_section(f"https://www.in.gov.br/leiturajornal?data={self._date}&secao=do1")
         if section:
-            print(f'Success')
+            print(f'---------------> Success')
             return section
         else:
-            print(f'Error')
+            print(f'---------------> Error')
             log_error(f'[+] Could not get edition {self._date}: {error}')
             self._errors.append(error)
 
     def _verify_regular_edition_exists(self):
         print(f'[+][+][+] Checking if dou edition {self._date} exists:')
         if self._section_d01 and self._section_d01['jsonArray']:
-            print(f'Exists')
+            print(f'---------------> Exists')
             self._create_dir(self._date)
             return True
         else:
-            print(f'Do not exists')
+            print(f'---------------> Do not exists')
             return False
 
     def _find_extra_editions(self):

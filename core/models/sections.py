@@ -23,11 +23,11 @@ class Sections:
                     url = f"https://www.in.gov.br/leiturajornal?data={self._date}&secao={item}"
                     section, error = get_section(url)
                     if section:
-                        print(f'Success')
+                        print(f'---------------> Success')
                         self._save_section(item, section)
                         self._scraped_sections.append(section)
                     else:
-                        print(f'Error')
+                        print(f'---------------> Error')
                         log_error(f'[+] Could not get {self._date}: {error}')
                         self._errors.append(error)
 
@@ -56,10 +56,10 @@ class Sections:
         files = get_files_in_dir(ROOT_PATH + f'/outputs/{format_date(self._date)}/sections')
         saved_sections = set([file.strip('.json') for file in files])
         if saved_sections == set(self._edition_sections):
-            print("[+][+] True")
+            print("---------------> True")
             return True
         else:
-            print("[+][+] False")
+            print("---------------> False")
             return False
 
     def _load_sections_from_file(self):
