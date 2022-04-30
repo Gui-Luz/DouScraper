@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 from core.auxiliary.auxiliary import get_section, log_error, ROOT_PATH, format_date, load_json_from_file, get_files_in_dir
 
