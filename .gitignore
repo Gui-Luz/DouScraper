@@ -5,4 +5,5 @@
 dou_scrapper.log
 output.json
 .gitignore
-elk_get.json
+/outputs
+/config

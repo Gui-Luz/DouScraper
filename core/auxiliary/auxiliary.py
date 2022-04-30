@@ -1,5 +1,9 @@
+from datetime import datetime
+import os
+import json
 import requests
 from bs4 import BeautifulSoup as bs
+
 
 HEADER = {
 
@@ -19,6 +23,8 @@ HEADER = {
     "Cache-Control": "max-age=0",
 }
 
+ROOT_PATH = os.getcwd()
+
 
 def request_url(url):
     r = requests.get(url, headers=HEADER)
@@ -28,5 +34,26 @@ def request_url(url):
 def get_soup(html):
     soup = bs(html, 'html.parser')
     return soup
+
+
+def get_section(url):
+    try:
+        html = request_url(url)
+        soup = get_soup(html)
+        script = soup.find("script", id="params")
+        j = json.loads(script.text)
+        return j, None
+    except Exception as e:
+        return None, e
+
+
+def format_date_for_elk(date_string):
+    date_object = datetime.strptime(date_string, "%d/%m/%Y")
+    return str(date_object.date())
+
+
+def log_error(error):
+    with open('./output/error_log.txt', 'w') as file:
+        file.write(error)
 
 

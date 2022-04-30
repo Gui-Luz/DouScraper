@@ -1,38 +1,34 @@
 import datetime
-import logging
-import time
-import json
-from core.models.edition_builder import EditionBuilder
-from core.models.article_chopper import ArticleChopper
-from core.models.full_article_scrapper import FullArticleScraper
-
-logging.basicConfig(filename='dou_scrapper.log', filemode='w', format='%(message)s',
-                    level=logging.DEBUG)
+from core.models.edition import Edition
+from core.models.sections import Sections
+from core.models.articles import Articles, FullArticles
 
 
 class DouScrapper:
     def __init__(self, start_date, end_date=None,):
-        self._counter = 1
         if end_date:
             self._dates = self._generate_dates(start_date, end_date)
         else:
             self._dates = [start_date]
         self._number_of_dates = len(self._dates)
+        self._editions = []
+        self._sections = []
+        self._full_articles = []
 
     def scrape(self):
-        print(f'[+] Started scraping at {datetime.datetime.now()}')
+        print(f'[+][+][+][+] Started scraping at {datetime.datetime.now()}')
+        print(f'[+][+][+][+] Will scrape {len(self._dates)} DOU editions.')
         while self._dates:
             date = self._dates.pop(0)
-            print(f'[+] Scraping dou edition: {date}')
-            edition = EditionBuilder(date)
-            sections = edition.builder()
-            chopper = ArticleChopper(sections)
-            articles = chopper.chop()
-            for article in articles:
-                article = FullArticleScraper(article)
-                self._save_article(article.return_full_article(), date)
-            time.sleep(1)
-        print(f'[+]Started scraping {datetime.datetime.now()}')
+            edition = Edition(date)
+            if edition.exists:
+                sections = Sections(edition)
+                articles = Articles(sections.sections)
+                full_articles = FullArticles(articles.articles)
+                self._editions.append(edition)
+                self._sections.append(sections)
+                self._full_articles.append(full_articles)
+        print(f'[+][+][+][+] Stoped scraping at {datetime.datetime.now()}')
 
     def _generate_dates(self, start, end):
         dt = datetime.datetime(self._format_time(start)[0], self._format_time(start)[1], self._format_time(start)[2])
@@ -44,6 +40,14 @@ class DouScrapper:
             dt += step
         return date_list
 
+    @property
+    def full_articles(self):
+        return self._full_articles
+
+    @property
+    def editions(self):
+        return self._editions
+
     @staticmethod
     def _format_time(time_string):
         time_components = time_string.split('-')
@@ -52,7 +56,3 @@ class DouScrapper:
         year = int(time_components[2])
         return year, month, day
 
-    @staticmethod
-    def _save_article(article, date):
-        with open(f'output-{date}.json', 'a', encoding='utf-8') as file:
-            json.dump(article, file, indent=4, ensure_ascii=False)
