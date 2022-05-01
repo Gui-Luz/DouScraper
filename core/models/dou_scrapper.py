@@ -5,7 +5,7 @@ from core.models.articles import Articles, FullArticles
 
 
 class DouScrapper:
-    def __init__(self, start_date, end_date=None,):
+    def __init__(self, start_date, end_date=None):
         if end_date:
             self._dates = self._generate_dates(start_date, end_date)
         else:

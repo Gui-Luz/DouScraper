@@ -23,7 +23,7 @@ HEADER = {
     "Cache-Control": "max-age=0",
 }
 
-ROOT_PATH = os.getcwd()
+ROOT_PATH = os.getcwd().split('/core')[0]
 
 
 def request_url(url):
@@ -60,7 +60,7 @@ def format_date(date_string):
 
 
 def log_error(error):
-    with open('./outputs/error_log.txt', 'w') as file:
+    with open('./outputs/error_log.txt', 'a') as file:
         file.write(error)
 
 

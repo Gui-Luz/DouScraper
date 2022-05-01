@@ -1,7 +1,5 @@
 import os
-
-from core.auxiliary.auxiliary import get_section, log_error, ROOT_PATH, format_date, load_json_from_file, get_files_in_dir
-
+from core.auxiliary.auxiliary import get_section, log_error, format_date, ROOT_PATH
 
 class Edition:
 
@@ -65,6 +63,7 @@ class Edition:
     @staticmethod
     def _create_dir(date):
         date_formated = format_date(date)
+        print(f'{ROOT_PATH} +++++++++++++++++++++++++++')
         dir_path = f"{ROOT_PATH}/outputs/{date_formated}"
         sections = dir_path + '/sections'
         articles_dir_path = dir_path + '/full_articles'

@@ -1,9 +1,6 @@
 /venv
 /.idea
 /.git
-/results
-dou_scrapper.log
-output.json
 .gitignore
 /outputs
-/config
+/config/config.ini

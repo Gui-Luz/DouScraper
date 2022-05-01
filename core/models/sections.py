@@ -1,4 +1,5 @@
-from core.auxiliary.auxiliary import get_section, log_error, format_date, get_files_in_dir, ROOT_PATH, load_json_from_file
+from core.auxiliary.auxiliary import get_section, log_error, format_date, get_files_in_dir, ROOT_PATH, \
+    load_json_from_file
 import json
 
 
@@ -41,7 +42,7 @@ class Sections:
 
     def _save_section(self, section_name, section):
         date = format_date(self._date)
-        with open(f"./outputs/{date}/sections/{section_name}.json", 'a',
+        with open(f"{ROOT_PATH}/outputs/{date}/sections/{section_name}.json", 'a',
                     encoding='utf-8') as file:
             json.dump(section, file, indent=4, ensure_ascii=False)
 

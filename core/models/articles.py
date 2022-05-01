@@ -1,4 +1,5 @@
 from core.auxiliary.auxiliary import get_soup, request_url, format_date_for_elk, log_error, get_files_in_dir
+from core.auxiliary.auxiliary import ROOT_PATH
 import json
 import hashlib
 
@@ -74,7 +75,7 @@ class FullArticles:
 
     @staticmethod
     def _save_article(article, hashed_article):
-        with open(f"./outputs/{article['pubDate']}/full_articles/{hashed_article}.json", 'a', encoding='utf-8') as file:
+        with open(f"{ROOT_PATH}/outputs/{article['pubDate']}/full_articles/{hashed_article}.json", 'a', encoding='utf-8') as file:
             json.dump(article, file, indent=4, ensure_ascii=False)
 
     @property
@@ -83,7 +84,7 @@ class FullArticles:
 
     @staticmethod
     def _check_article_is_saved(article, hashed_article):
-        files = get_files_in_dir(f"./outputs/{article['pubDate']}/full_articles/")
+        files = get_files_in_dir(f"{ROOT_PATH}/outputs/{article['pubDate']}/full_articles/")
         if hashed_article in [file.strip('.json') for file in files]:
             print(f'---------------> Article is already saved')
             return True
